@@ -203,34 +203,59 @@ export default function AboutPage() {
   const [isLightMode, setIsLightMode] = useState(true);
   const [isModeAnimating, setIsModeAnimating] = useState(false);
   const hasMountedRef = useRef(false);
+  const sectionTimerRef = useRef<number | null>(null);
+  const modeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (activeSection === displaySection) {
-      setIsSectionVisible(true);
+    return () => {
+      if (sectionTimerRef.current !== null) {
+        window.clearTimeout(sectionTimerRef.current);
+      }
+
+      if (modeTimerRef.current !== null) {
+        window.clearTimeout(modeTimerRef.current);
+      }
+    };
+  }, []);
+
+  function handleSectionChange(nextSection: SectionKey) {
+    if (nextSection === activeSection) {
       return;
     }
 
+    setActiveSection(nextSection);
     setIsSectionVisible(false);
 
-    const switchTimer = window.setTimeout(() => {
-      setDisplaySection(activeSection);
+    if (sectionTimerRef.current !== null) {
+      window.clearTimeout(sectionTimerRef.current);
+    }
+
+    sectionTimerRef.current = window.setTimeout(() => {
+      setDisplaySection(nextSection);
       setIsSectionVisible(true);
+      sectionTimerRef.current = null;
     }, 180);
+  }
 
-    return () => window.clearTimeout(switchTimer);
-  }, [activeSection, displaySection]);
+  function handleModeChange(nextIsLightMode: boolean) {
+    setIsLightMode(nextIsLightMode);
 
-  useEffect(() => {
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
       return;
     }
 
     setIsModeAnimating(true);
-    const animationTimer = window.setTimeout(() => setIsModeAnimating(false), 520);
 
-    return () => window.clearTimeout(animationTimer);
-  }, [isLightMode]);
+    if (modeTimerRef.current !== null) {
+      window.clearTimeout(modeTimerRef.current);
+    }
+
+    modeTimerRef.current = window.setTimeout(() => {
+      setIsModeAnimating(false);
+      modeTimerRef.current = null;
+    }, 520);
+  }
 
   const activeMeta = sectionOrder.find((section) => section.key === activeSection) ?? sectionOrder[0];
   const displayMeta = sectionOrder.find((section) => section.key === displaySection) ?? sectionOrder[0];
@@ -240,7 +265,7 @@ export default function AboutPage() {
   return (
     <div className={`relative h-screen overflow-hidden bg-black transition-colors duration-500 ${rootTone}`}>
       <div className="fixed inset-0 z-0">
-        <WaveTiles className={isLightMode ? "opacity-95" : "opacity-60"} onModeChange={setIsLightMode} trackPointerGlobally />
+        <WaveTiles className={isLightMode ? "opacity-95" : "opacity-60"} onModeChange={handleModeChange} trackPointerGlobally />
       </div>
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div
@@ -290,7 +315,7 @@ export default function AboutPage() {
               label={section.label}
               accent={section.accent}
               isLightMode={isLightMode}
-              onClick={() => setActiveSection(section.key)}
+              onClick={() => handleSectionChange(section.key)}
             />
           ))}
         </div>

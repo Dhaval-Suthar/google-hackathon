@@ -138,34 +138,59 @@ export default function Page() {
   const [isLightMode, setIsLightMode] = useState(true);
   const [isModeAnimating, setIsModeAnimating] = useState(false);
   const hasMountedRef = useRef(false);
+  const tierTimerRef = useRef<number | null>(null);
+  const modeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (activeTier === displayTier) {
-      setIsTierVisible(true);
+    return () => {
+      if (tierTimerRef.current !== null) {
+        window.clearTimeout(tierTimerRef.current);
+      }
+
+      if (modeTimerRef.current !== null) {
+        window.clearTimeout(modeTimerRef.current);
+      }
+    };
+  }, []);
+
+  function handleTierChange(nextTier: TierKey) {
+    if (nextTier === activeTier) {
       return;
     }
 
+    setActiveTier(nextTier);
     setIsTierVisible(false);
 
-    const switchTimer = window.setTimeout(() => {
-      setDisplayTier(activeTier);
+    if (tierTimerRef.current !== null) {
+      window.clearTimeout(tierTimerRef.current);
+    }
+
+    tierTimerRef.current = window.setTimeout(() => {
+      setDisplayTier(nextTier);
       setIsTierVisible(true);
+      tierTimerRef.current = null;
     }, 180);
+  }
 
-    return () => window.clearTimeout(switchTimer);
-  }, [activeTier, displayTier]);
+  function handleModeChange(nextIsLightMode: boolean) {
+    setIsLightMode(nextIsLightMode);
 
-  useEffect(() => {
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
       return;
     }
 
     setIsModeAnimating(true);
-    const animationTimer = window.setTimeout(() => setIsModeAnimating(false), 520);
 
-    return () => window.clearTimeout(animationTimer);
-  }, [isLightMode]);
+    if (modeTimerRef.current !== null) {
+      window.clearTimeout(modeTimerRef.current);
+    }
+
+    modeTimerRef.current = window.setTimeout(() => {
+      setIsModeAnimating(false);
+      modeTimerRef.current = null;
+    }, 520);
+  }
 
   const activeTierMeta = tiers.find((tier) => tier.key === activeTier) ?? tiers[0];
   const displayTierMeta = tiers.find((tier) => tier.key === displayTier) ?? tiers[0];
@@ -175,7 +200,7 @@ export default function Page() {
   return (
     <div className={`relative h-screen overflow-hidden bg-black transition-colors duration-500 ${rootTone}`}>
       <div className="fixed inset-0 z-0">
-        <WaveTiles className={isLightMode ? "opacity-95" : "opacity-60"} onModeChange={setIsLightMode} trackPointerGlobally />
+        <WaveTiles className={isLightMode ? "opacity-95" : "opacity-60"} onModeChange={handleModeChange} trackPointerGlobally />
       </div>
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div
@@ -225,7 +250,7 @@ export default function Page() {
               label={tier.label}
               accent={tier.accent}
               isLightMode={isLightMode}
-              onClick={() => setActiveTier(tier.key)}
+              onClick={() => handleTierChange(tier.key)}
             />
           ))}
         </div>
