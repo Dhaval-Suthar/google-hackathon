@@ -128,25 +128,25 @@ function InfoCard({ title, subtitle, description, href, cta, accent, isLightMode
   const content = (
     <>
       <div
-        className={`flex h-20 items-center justify-between border-2 px-4 text-sm font-bold uppercase tracking-widest xl:h-24 xl:px-5 xl:text-base ${
+        className={`flex h-20 items-center justify-between border-2 px-4 text-sm font-bold uppercase tracking-widest xl:h-22 xl:text-[0.8125rem] ${
           isLightMode ? "border-black/10 bg-black/5 text-black/40" : "border-white/10 bg-white/5 text-white/30"
         }`}
         style={{ borderTopColor: accent }}
       >
-        <span className="min-w-0 pr-3">{subtitle}</span>
-        <span className="shrink-0" style={{ color: accent }}>01</span>
+        <span>{subtitle}</span>
+        <span style={{ color: accent }}>01</span>
       </div>
-      <div className="min-w-0">
-        <p className={`text-base font-black uppercase tracking-widest xl:text-lg ${isLightMode ? "text-black" : "text-white"}`}>{title}</p>
-        <p className={`mt-2 text-sm leading-6 xl:text-base xl:leading-7 ${isLightMode ? "text-black/65" : "text-white/65"}`}>{description}</p>
+      <div>
+        <p className={`text-base font-black uppercase tracking-widest ${isLightMode ? "text-black" : "text-white"}`}>{title}</p>
+        <p className={`mt-2 text-sm leading-6 xl:text-[0.9375rem] xl:leading-relaxed ${isLightMode ? "text-black/65" : "text-white/65"}`}>{description}</p>
       </div>
-      <span className="mt-auto shrink-0 text-[11px] font-black uppercase tracking-widest xl:text-xs" style={{ color: accent }}>
+      <span className="mt-auto text-[11px] font-black uppercase tracking-widest xl:text-xs" style={{ color: accent }}>
         {cta ?? (href ? "Open →" : "Core Focus")}
       </span>
     </>
   );
 
-  const className = `pointer-events-auto group flex h-full min-h-64 flex-col gap-4 overflow-hidden border-2 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 xl:min-h-72 xl:gap-5 xl:p-7 ${
+  const className = `pointer-events-auto group flex h-full flex-col gap-4 border-2 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 ${
     isLightMode
       ? "border-black/15 bg-white/72 text-black shadow-[8px_8px_0_rgba(255,255,255,0.15)] hover:border-black/35 hover:bg-white/85"
       : "border-white/20 bg-black/55 text-white shadow-[8px_8px_0_rgba(0,0,0,0.35)] hover:border-white/50 hover:bg-black/70"
@@ -180,7 +180,7 @@ function SectionButton({
     <button
       type="button"
       onClick={onClick}
-      className={`pointer-events-auto border-2 px-4 py-3 text-xs font-black uppercase tracking-[0.24em] transition-all duration-300 sm:text-sm xl:px-5 xl:py-3.5 xl:text-base ${
+      className={`pointer-events-auto border-2 px-4 py-3 text-xs font-black uppercase tracking-[0.24em] transition-all duration-300 sm:text-sm xl:text-sm ${
         active
           ? isLightMode
             ? "border-black bg-[#fff7d6] text-black shadow-[5px_5px_0_#000]"
@@ -272,12 +272,12 @@ export default function AboutPage() {
         <header className="shrink-0 text-center">
           <p className={`text-[10px] font-black uppercase tracking-[0.4em] xl:text-xs ${isLightMode ? "text-black/55" : "text-white/50"}`}>Hack X 2.0</p>
           <h1
-            className={`navbar-font mt-3 text-4xl uppercase leading-none transition-all duration-500 sm:text-6xl xl:text-7xl 2xl:text-[5.5rem] ${isModeAnimating ? "scale-[1.02]" : "scale-100"}`}
+            className={`navbar-font mt-3 text-4xl uppercase leading-none transition-all duration-500 sm:text-6xl xl:text-[4.25rem] ${isModeAnimating ? "scale-[1.02]" : "scale-100"}`}
             style={{ textShadow: `4px 4px 0 ${activeMeta.accent}` }}
           >
             About The Event
           </h1>
-          <p className={`mx-auto mt-4 max-w-2xl text-sm leading-6 sm:text-base xl:max-w-3xl xl:text-lg xl:leading-7 ${isLightMode ? "text-black/65" : "text-white/65"}`}>
+          <p className={`mx-auto mt-4 max-w-2xl text-sm leading-6 sm:text-base xl:max-w-3xl xl:text-[0.9375rem] xl:leading-relaxed ${isLightMode ? "text-black/65" : "text-white/65"}`}>
             The mission, the organizers, and the core operating team behind Hack X 2.0 in the same visual system as the sponsors experience.
           </p>
         </header>
@@ -308,7 +308,7 @@ export default function AboutPage() {
                 <div>
                   <p className={`text-[10px] font-black uppercase tracking-[0.34em] xl:text-xs ${isLightMode ? "text-black/50" : "text-white/55"}`}>About section</p>
                   <h2
-                    className={`navbar-font mt-2 text-3xl uppercase leading-none transition-all duration-300 sm:text-4xl xl:text-5xl ${
+                    className={`navbar-font mt-2 text-3xl uppercase leading-none transition-all duration-300 sm:text-4xl xl:text-[2.75rem] ${
                       isLightMode ? "text-black" : "text-white"
                     }`}
                     style={{ textShadow: `3px 3px 0 ${displayMeta.accent}` }}
@@ -323,17 +323,16 @@ export default function AboutPage() {
                   {String(displayContent.cards.length).padStart(2, "0")} tiles
                 </span>
               </div>
-              <p className={`mt-4 max-w-3xl text-sm leading-6 sm:text-base xl:max-w-4xl xl:text-lg xl:leading-7 ${isLightMode ? "text-black/65" : "text-white/65"}`}>
+              <p className={`mt-4 max-w-3xl text-sm leading-6 sm:text-base xl:text-[0.9375rem] xl:leading-relaxed ${isLightMode ? "text-black/65" : "text-white/65"}`}>
                 {displayContent.intro}
               </p>
             </div>
 
-            <div className="min-h-0 flex-1 px-5 py-5 sm:px-6 sm:py-6 xl:px-7 xl:py-7">
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6 sm:py-6 xl:px-7 xl:py-7">
               <div
-                className={`grid content-start gap-4 overflow-y-auto pr-1 transition-all duration-300 xl:gap-5 ${displayContent.colClass} ${
+                className={`grid auto-rows-auto gap-4 transition-all duration-300 xl:gap-5 ${displayContent.colClass} ${
                   isSectionVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
-                style={{ gridAutoRows: "minmax(16rem, auto)" }}
               >
                 {displayContent.cards.map((card, index) => (
                   <div
@@ -357,7 +356,7 @@ export default function AboutPage() {
           </p>
           <Link
             href="/contact"
-            className="pointer-events-auto inline-flex items-center gap-2 border-2 border-black bg-[#ffd23f] px-5 py-3 text-sm font-black uppercase tracking-[0.22em] text-black shadow-[5px_5px_0_#000] transition-transform hover:-translate-y-0.5 xl:px-6 xl:py-3.5 xl:text-base"
+            className="pointer-events-auto inline-flex items-center gap-2 border-2 border-black bg-[#ffd23f] px-5 py-3 text-sm font-black uppercase tracking-[0.22em] text-black shadow-[5px_5px_0_#000] transition-transform hover:-translate-y-0.5"
           >
             Contact team →
           </Link>
