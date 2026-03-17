@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { useTheme } from "@/app/providers/theme-provider";
 import { motion, useSpring } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 /* ─── Styles ─────────────────────────────────────────────── */
 const STYLES = `
@@ -28,17 +28,17 @@ type EventItem = {
 
 const EVENTS: EventItem[] = [
   // Day 1
-  { title: "Reporting", time: "08:00 AM", date: "April 18th", step: "01", accent: "#00f0ff" },
-  { title: "Inauguration Ceremony", time: "09:00 AM", date: "April 18th", step: "02", accent: "#ffcf00" },
-  { title: "Hackathon Begins", time: "10:00 AM", date: "April 18th", step: "03", accent: "#ff00a0", highlight: true },
-  { title: "Round 1 {Idea Pitch}", sub: "Judges visit your table to validate your idea", time: "12:00 PM", date: "April 18th", step: "04", accent: "#c0ff00" },
-  { title: "Mentoring Round", time: "03:00 PM", date: "April 18th", step: "05", accent: "#a000ff" },
-  { title: "Round 2 {Mid Project Eval}", sub: "Progress assess issuing points", time: "07:00 PM", date: "April 18th", step: "06", accent: "#ff5e00" },
+  { title: "Reporting", time: "08:00 AM", date: "April 17th", step: "01", accent: "#00f0ff" },
+  { title: "Inauguration Ceremony", time: "09:00 AM", date: "April 17th", step: "02", accent: "#ffcf00" },
+  { title: "Hackathon Begins", time: "10:00 AM", date: "April 17th", step: "03", accent: "#ff00a0", highlight: true },
+  { title: "Round 1 {Idea Pitch}", sub: "Judges visit your table to validate your idea", time: "12:00 PM", date: "April 17th", step: "04", accent: "#c0ff00" },
+  { title: "Mentoring Round", time: "03:00 PM", date: "April 17th", step: "05", accent: "#a000ff" },
+  { title: "Round 2 {Mid Project Eval}", sub: "Progress assess issuing points", time: "07:00 PM", date: "April 17th", step: "06", accent: "#ff5e00" },
   // Day 2
-  { title: "Reporting", time: "08:00 AM", date: "April 19th", step: "07", accent: "#00b8ff" },
-  { title: "Round 3 Final Judging", sub: "Final presentation", time: "09:00 AM", date: "April 19th", step: "08", accent: "#ff3c00" },
-  { title: "Prize Distribution", time: "10:00 AM", date: "April 19th", step: "09", accent: "#00ff40", highlight: true },
-  { title: "Hackathon Ends", time: "11:00 AM", date: "April 19th", step: "10", accent: "#ff00a0", highlight: true },
+  { title: "Reporting", time: "08:00 AM", date: "April 18th", step: "07", accent: "#00b8ff" },
+  { title: "Round 3 Final Judging", sub: "Final presentation", time: "09:00 AM", date: "April 18th", step: "08", accent: "#ff3c00" },
+  { title: "Prize Distribution", time: "10:00 AM", date: "April 18th", step: "09", accent: "#00ff40", highlight: true },
+  { title: "Hackathon Ends", time: "11:00 AM", date: "April 18th", step: "10", accent: "#ff00a0", highlight: true },
 ];
 
 /* ─── 3-D Cube ────────────────────────────────────────────── */
@@ -243,10 +243,10 @@ export default function TimelinePage() {
       // **Testing:** Uncomment the line below and change the date/time to preview different progress states.
       // const now = new Date("2026-04-18T15:00:00").getTime(); 
       const now = Date.now();
-      
+
       const eventTimes = EVENTS.map(e => {
-          const dStr = e.date.replace(/(st|nd|rd|th)/, "");
-          return new Date(`2026 ${dStr} ${e.time}`).getTime();
+        const dStr = e.date.replace(/(st|nd|rd|th)/, "");
+        return new Date(`2026 ${dStr} ${e.time}`).getTime();
       });
 
       const startTime = eventTimes[0];
@@ -259,8 +259,8 @@ export default function TimelinePage() {
       } else {
         let progress = 0;
         for (let i = 0; i < eventTimes.length - 1; i++) {
-          if (now >= eventTimes[i] && now < eventTimes[i+1]) {
-            const segmentProgress = (now - eventTimes[i]) / (eventTimes[i+1] - eventTimes[i]);
+          if (now >= eventTimes[i] && now < eventTimes[i + 1]) {
+            const segmentProgress = (now - eventTimes[i]) / (eventTimes[i + 1] - eventTimes[i]);
             progress = (i + segmentProgress) / (eventTimes.length - 1);
             break;
           }
@@ -355,7 +355,7 @@ export default function TimelinePage() {
               stroke="#ff00a0"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ 
+              style={{
                 pathLength: drawProgress,
                 animation: "pulseGlow 2s infinite ease-in-out"
               }}
@@ -392,7 +392,7 @@ export default function TimelinePage() {
                     <div className="cursor-target text-center flex flex-col items-center justify-start flex-1 w-full gap-1 mt-2">
                       {/* 1) Time */}
                       <span
-                        className="cursor-target font-black text-2xl tracking-tighter tabular-nums"
+                        className="cursor-target font-black text-xl sm:text-2xl tracking-tighter tabular-nums"
                         style={{ color: e.accent }}
                       >
                         {e.time}

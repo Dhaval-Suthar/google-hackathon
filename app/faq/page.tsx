@@ -105,20 +105,19 @@ function AccordionItem({
 
   return (
     <div
-      className={`cursor-target group border-[3px] h-fit transition-all duration-300 ${
-        isLightMode
+      className={`cursor-target group border-[3px] h-fit transition-all duration-300 ${isLightMode
           ? "border-black bg-white shadow-[4px_4px_0_#000]"
           : "border-white/40 bg-[#111] shadow-[4px_4px_0_#c0ff00]"
-      } ${isOpen ? "-translate-y-1" : "hover:-translate-y-0.5"}`}
+        } ${isOpen ? "-translate-y-1" : "hover:-translate-y-0.5"}`}
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex w-full cursor-pointer items-center justify-between p-6 text-left font-black uppercase tracking-wide text-lg sm:text-xl focus:outline-none ${isLightMode ? "text-black" : "text-white"}`}
+        className={`flex w-full cursor-pointer items-center justify-between p-4 sm:p-6 text-left font-black uppercase tracking-wide text-base sm:text-lg md:text-xl focus:outline-none ${isLightMode ? "text-black" : "text-white"}`}
       >
-        {question}
+        <span className="pr-3">{question}</span>
         <motion.span
           animate={{ rotate: isOpen ? 45 : 0 }}
-          className={`ml-4 text-2xl transition-colors duration-300 ${isLightMode ? "text-[#ff00a0]" : "text-[#c0ff00]"}`}
+          className={`ml-2 text-2xl sm:text-3xl flex-shrink-0 transition-colors duration-300 ${isLightMode ? "text-[#ff00a0]" : "text-[#c0ff00]"}`}
         >
           +
         </motion.span>
@@ -134,7 +133,7 @@ function AccordionItem({
             className="overflow-hidden"
           >
             <div
-              className={`mx-6 pb-6 font-bold leading-relaxed border-t-[3px] mt-2 pt-4 ${isLightMode ? "text-black/80 border-black/10" : "text-white/80 border-white/10"}`}
+              className={`mx-4 sm:mx-6 pb-4 sm:pb-6 text-sm sm:text-base font-bold leading-relaxed border-t-[3px] mt-2 pt-3 sm:pt-4 ${isLightMode ? "text-black/80 border-black/10" : "text-white/80 border-white/10"}`}
             >
               {answer}
             </div>

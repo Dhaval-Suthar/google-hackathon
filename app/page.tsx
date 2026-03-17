@@ -56,15 +56,15 @@ function CountdownItem({
   color: string;
 }) {
   return (
-    <div className="relative flex w-20 flex-col items-center justify-center p-3 sm:w-32 sm:p-6 group overflow-hidden border-[3px] border-black bg-white shadow-[6px_6px_0_#000] transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0_#000]">
+    <div className="relative flex w-16 flex-col items-center justify-center p-2 sm:w-24 sm:p-4 md:w-32 md:p-6 group overflow-hidden border-[3px] border-black bg-white shadow-[4px_4px_0_#000] sm:shadow-[6px_6px_0_#000] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0_#000] sm:hover:shadow-[8px_8px_0_#000]">
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{ backgroundColor: color, zIndex: 0 }}
       />
-      <span className="relative z-10 navbar-font text-4xl font-black sm:text-6xl text-black">
+      <span className="relative z-10 navbar-font text-3xl font-black sm:text-5xl md:text-6xl text-black">
         {value}
       </span>
-      <span className="relative z-10 mt-2 text-[10px] font-black uppercase tracking-[0.3em] text-black/70 group-hover:text-black">
+      <span className="relative z-10 mt-1 sm:mt-2 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-black/70 group-hover:text-black">
         {label}
       </span>
     </div>
@@ -86,11 +86,10 @@ function FloatingBadge({
 }) {
   return (
     <div
-      className={`absolute z-20 flex items-center justify-center p-3 transition-all duration-500 ${
-        isLightMode
+      className={`absolute z-20 flex items-center justify-center p-3 transition-all duration-500 ${isLightMode
           ? "border-[3px] border-black bg-white/80 shadow-[6px_6px_0_#000]"
           : "border-[3px] border-white/50 bg-[#111]/80 shadow-[6px_6px_0_#c0ff00]"
-      } ${styleName}`}
+        } ${styleName}`}
       style={{
         animation: `${floatRev ? "float-reverse" : "float"} 6s ease-in-out infinite`,
         animationDelay: `${delay}s`,
@@ -118,11 +117,10 @@ function HighlightCard({
 }) {
   return (
     <div
-      className={`cursor-target group relative flex flex-col p-6 sm:p-8 transition-transform duration-500 hover:-translate-y-2 ${
-        isLightMode
+      className={`cursor-target group relative flex flex-col p-6 sm:p-8 transition-transform duration-500 hover:-translate-y-2 ${isLightMode
           ? "border-[3px] border-black bg-white shadow-[8px_8px_0_#000]"
           : "border-[3px] border-white/30 bg-[#0a0a0a] shadow-[8px_8px_0_#fff]"
-      }`}
+        }`}
       style={{
         animation: `float-reverse 8s ease-in-out infinite`,
         animationDelay: `${delay}s`,
@@ -276,6 +274,42 @@ export default function Home() {
   const [preloaderComplete, setPreloaderComplete] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Countdown to hackathon start: April 17, 2026 at 10:00 AM
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  // Safety timeout for preloader - ensures user is never stuck
+  React.useEffect(() => {
+    const safetyTimeout = setTimeout(() => {
+      setPreloaderComplete(true);
+    }, 5000); // Force complete after 5 seconds maximum
+
+    return () => clearTimeout(safetyTimeout);
+  }, []);
+
+  React.useEffect(() => {
+    const targetDate = new Date("2026-04-17T10:00:00").getTime();
+
+    const updateCountdown = () => {
+      const now = Date.now();
+      const distance = targetDate - now;
+
+      if (distance > 0) {
+        setCountdown({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
+      } else {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   React.useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -398,7 +432,7 @@ export default function Home() {
           <WaveTiles
             className={isLightMode ? "opacity-40" : "opacity-30"}
             optimizeForPerformance
-            onModeChange={() => {}}
+            onModeChange={() => { }}
           />
         </div>
       )}
@@ -463,7 +497,7 @@ export default function Home() {
               </span>
               <div className="mt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-3 ">
                 <span className="text-xl sm:text-2xl font-black text-[#ff00a0]">
-                  32
+                  {countdown.days.toString().padStart(2, "0")}
                 </span>
                 <span className="text-xs font-semibold text-black/60 dark:text-white/60">
                   Days
@@ -472,7 +506,7 @@ export default function Home() {
                   :
                 </span>
                 <span className="text-xl sm:text-2xl font-black text-[#00f0ff]">
-                  10
+                  {countdown.hours.toString().padStart(2, "0")}
                 </span>
                 <span className="text-xs font-semibold text-black/60 dark:text-white/60">
                   Hours
@@ -481,7 +515,7 @@ export default function Home() {
                   :
                 </span>
                 <span className="text-xl sm:text-2xl font-black text-[#ff00a0]">
-                  57
+                  {countdown.minutes.toString().padStart(2, "0")}
                 </span>
                 <span className="text-xs font-semibold text-black/60 dark:text-white/60">
                   Minutes
@@ -573,7 +607,7 @@ export default function Home() {
                 >
                   <div className="relative z-10 w-full flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 pt-16 sm:pt-42">
                     <div
-                      className={`inline-block border-[3px] px-6 py-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] transition-transform hover:scale-105 ${isLightMode ? "border-black bg-[#ff00a0] text-white shadow-[4px_4px_0_#000]" : "border-white bg-[#ff00a0] text-white shadow-[4px_4px_0_#fff]"}`}
+                      className={`inline-block border-[3px] px-4 py-2 sm:px-6 sm:py-2 text-[8px] sm:text-[10px] md:text-xs font-black uppercase tracking-[0.3em] transition-transform hover:scale-105 ${isLightMode ? "border-black bg-[#ff00a0] text-white shadow-[4px_4px_0_#000]" : "border-white bg-[#ff00a0] text-white shadow-[4px_4px_0_#fff]"}`}
                     >
                       CSI & GDG SFIT PRESENTS
                     </div>
@@ -590,15 +624,15 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="relative z-10 w-full flex flex-col items-center lg:flex-row lg:items-end justify-between text-center lg:text-left mt-auto pb-8">
-                    <div className="flex flex-col items-center lg:items-start gap-4 sm:gap-6 max-w-xl">
+                  <div className="relative z-10 w-full flex flex-col items-center lg:flex-row lg:items-end justify-between text-center lg:text-left mt-auto pb-8 px-2 sm:px-4">
+                    <div className="flex flex-col items-center lg:items-start gap-3 sm:gap-6 max-w-xl w-full">
                       <div
-                        className={`cursor-target inline-block w-max font-black uppercase tracking-widest text-xs sm:text-sm whitespace-nowrap border-[3px] px-4 py-2 ${isLightMode ? "border-black bg-white text-black shadow-[4px_4px_0_#000]" : "border-white bg-black text-white shadow-[4px_4px_0_#c0ff00]"}`}
+                        className={`cursor-target inline-block w-max font-black uppercase tracking-widest text-[10px] sm:text-xs md:text-sm whitespace-nowrap border-[3px] px-3 py-2 sm:px-4 sm:py-2 ${isLightMode ? "border-black bg-white text-black shadow-[4px_4px_0_#000]" : "border-white bg-black text-white shadow-[4px_4px_0_#c0ff00]"}`}
                       >
                         — CODE FOR BHARAT 5.0 —
                       </div>
                       <p
-                        className={`cursor-target text-xs sm:text-base font-bold leading-relaxed tracking-wide ${isLightMode ? "text-black p-3 sm:p-5 border-[3px] border-black bg-white/70 backdrop-blur-md shadow-[4px_4px_0_#000]" : "text-white p-3 sm:p-5 border-[3px] border-white/30 bg-black/50 backdrop-blur-md shadow-[4px_4px_0_#fff]"}`}
+                        className={`cursor-target text-[11px] sm:text-sm md:text-base font-bold leading-relaxed tracking-wide ${isLightMode ? "text-black p-3 sm:p-5 border-[3px] border-black bg-white/70 backdrop-blur-md shadow-[4px_4px_0_#000]" : "text-white p-3 sm:p-5 border-[3px] border-white/30 bg-black/50 backdrop-blur-md shadow-[4px_4px_0_#fff]"}`}
                       >
                         A national-level 24-hour student hackathon hosted at St.
                         Francis Institute of Technology, Mumbai. Join 10,000+
@@ -607,18 +641,18 @@ export default function Home() {
                       </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pointer-events-auto">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 pointer-events-auto mt-6 lg:mt-0 w-full lg:w-auto">
                       <Link
                         href="https://unstop.com/" // Placeholder: User should provide the actual event link
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="cursor-target group relative inline-flex items-center justify-center gap-3 px-6 py-3 sm:px-10 sm:py-5 font-black uppercase tracking-widest text-white transition-all hover:-translate-y-1 w-full sm:w-auto overflow-hidden border-[3px] border-black bg-[#1c4980] shadow-[6px_6px_0_#000] sm:shadow-[8px_8px_0_#000]"
+                        className="cursor-target group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-4 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 font-black text-xs sm:text-sm md:text-base uppercase tracking-widest text-white transition-all hover:-translate-y-1 w-full sm:w-auto overflow-hidden border-[3px] border-black bg-[#1c4980] shadow-[4px_4px_0_#000] sm:shadow-[6px_6px_0_#000] md:shadow-[8px_8px_0_#000]"
                       >
                         <div className="absolute inset-0 z-0 bg-[#2c69d1] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <svg
                           viewBox="0 0 200 200"
                           fill="currentColor"
-                          className="relative z-10 h-6 w-6"
+                          className="relative z-10 h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
                         >
                           <path d="M100,1C45.5,1,1,45.5,1,100c0,54.5,44.5,99,99,99c54.5,0,99-44.5,99-99C199,45.5,154.5,1,100,1z M90.1,140.1 l-20.6,0v-9.3c-5.9,9-13.1,12.8-23.9,12.8c-17.2,0-26.8-9.9-26.8-27.5V60.8h20.7v51c0,9.6,4.4,14.2,13.2,14.2 c10.1,0,16.6-6.2,16.6-15.6V60.7h20.7V140.1z M160.5,140.1v-49c0-9.4-4.4-14.2-13.2-14.2c-10.1,0-16.6,6.2-16.6,15.6v47.6h-20.7 V60.7l20.6,0v0.1v11.4c5.9-9,13.1-12.8,23.9-12.8c17.2,0,26.8,9.9,26.8,27.5v53.2H160.5z" />
                         </svg>
@@ -628,7 +662,7 @@ export default function Home() {
                       </Link>
                       <Link
                         href="about"
-                        className="cursor-target group relative inline-flex items-center justify-center px-4 py-3 sm:px-8 sm:py-5 font-black uppercase tracking-widest transition-all hover:-translate-y-1 w-full sm:w-auto"
+                        className="cursor-target group relative inline-flex items-center justify-center px-4 py-3 sm:px-6 sm:py-4 md:px-8 md:py-5 font-black text-xs sm:text-sm md:text-base uppercase tracking-widest transition-all hover:-translate-y-1 w-full sm:w-auto"
                       >
                         <div
                           className={`absolute inset-0 border-[3px] transition-transform duration-300 group-hover:translate-x-2 group-hover:translate-y-2 ${isLightMode ? "bg-white border-black" : "bg-black border-white"}`}
@@ -745,11 +779,10 @@ export default function Home() {
                       ].map((prize, idx) => (
                         <div
                           key={idx}
-                          className={`cursor-target p-6 sm:p-8 flex flex-col items-center justify-center border-[3px] transition-transform hover:-translate-y-2 duration-300 ${
-                            isLightMode
+                          className={`cursor-target p-6 sm:p-8 flex flex-col items-center justify-center border-[3px] transition-transform hover:-translate-y-2 duration-300 ${isLightMode
                               ? "border-black bg-white shadow-[8px_8px_0_#000]"
                               : "border-white/30 bg-[#111] shadow-[8px_8px_0_#fff]"
-                          }`}
+                            }`}
                         >
                           <span className="text-[11px] sm:text-sm font-black uppercase tracking-widest text-gray-500 mb-2 text-center leading-tight">
                             {prize.domain}
@@ -826,11 +859,10 @@ export default function Home() {
                       ].map((track, i) => (
                         <div
                           key={i}
-                          className={`cursor-target group relative flex flex-col items-center justify-center p-6 sm:p-8 transition-transform duration-500 hover:-translate-y-2 ${
-                            isLightMode
+                          className={`cursor-target group relative flex flex-col items-center justify-center p-6 sm:p-8 transition-transform duration-500 hover:-translate-y-2 ${isLightMode
                               ? "border-[3px] border-black bg-white shadow-[6px_6px_0_#000]"
                               : "border-[3px] border-white/30 bg-[#111] shadow-[6px_6px_0_#fff]"
-                          }`}
+                            }`}
                         >
                           <div
                             className="absolute inset-0 z-0 origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100"
@@ -842,9 +874,8 @@ export default function Home() {
                             {track.icon}
                           </div>
                           <h3
-                            className={`relative z-10 text-base sm:text-lg font-black uppercase tracking-widest text-center transition-colors duration-300 ${
-                              isLightMode ? "text-black" : "text-white"
-                            } group-hover:text-black`}
+                            className={`relative z-10 text-base sm:text-lg font-black uppercase tracking-widest text-center transition-colors duration-300 ${isLightMode ? "text-black" : "text-white"
+                              } group-hover:text-black`}
                           >
                             {track.name}
                           </h3>
@@ -915,22 +946,22 @@ export default function Home() {
             <div className="pb-10 relative z-20">
               {/* Countdown */}
               <div
-                className={`pointer-events-auto relative px-8 py-10 sm:py-14 text-center mx-auto max-w-4xl mt-32 border-[3px] ${isLightMode ? "border-black bg-[#c0ff00] shadow-[12px_12px_0_#000]" : "border-white/30 bg-[#c0ff00] shadow-[12px_12px_0_#fff]"}`}
+                className={`pointer-events-auto relative px-4 py-8 sm:px-8 sm:py-10 md:py-14 text-center mx-auto max-w-4xl mt-16 sm:mt-24 md:mt-32 border-[3px] ${isLightMode ? "border-black bg-[#c0ff00] shadow-[8px_8px_0_#000] sm:shadow-[12px_12px_0_#000]" : "border-white/30 bg-[#c0ff00] shadow-[8px_8px_0_#fff] sm:shadow-[12px_12px_0_#fff]"}`}
               >
-                <h2 className="text-2xl sm:text-6xl font-black uppercase tracking-tighter text-black">
+                <h2 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-black">
                   Hacking Begins In
                 </h2>
 
-                <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8 cursor-target">
-                  <CountdownItem value="32" label="Days" color="#ff00a0" />
-                  <div className="text-4xl font-black text-black hidden sm:block">
+                <div className="mt-6 sm:mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-8 cursor-target">
+                  <CountdownItem value={countdown.days.toString().padStart(2, "0")} label="Days" color="#ff00a0" />
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-black text-black hidden sm:block">
                     :
                   </div>
-                  <CountdownItem value="10" label="Hours" color="#00f0ff" />
-                  <div className="text-4xl font-black text-black hidden sm:block">
+                  <CountdownItem value={countdown.hours.toString().padStart(2, "0")} label="Hours" color="#00f0ff" />
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-black text-black hidden sm:block">
                     :
                   </div>
-                  <CountdownItem value="57" label="Minutes" color="#ff00a0" />
+                  <CountdownItem value={countdown.minutes.toString().padStart(2, "0")} label="Minutes" color="#ff00a0" />
                 </div>
               </div>
               {/* RESOURCES & TEAM SECTION */}
